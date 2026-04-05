@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHIHO SYSTEM</title>
+
+<style>
+body {margin:0;font-family:Arial;background:#0a0a0a;color:white;text-align:center;}
+.container {padding:20px;}
+.title {font-size:26px;color:#ff2b2b;text-shadow:0 0 10px #ff2b2b;}
+.btn {margin:10px auto;padding:14px;width:80%;background:#ff2b2b;border:none;color:white;border-radius:10px;font-size:16px;}
+.result {margin-top:20px;font-size:22px;}
+.hidden {display:none;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div id="game">
+  <div class="title">ПРОВЕРЬ УДАЧУ 🔥</div>
+  <button class="btn" onclick="spin()">КРУТИТЬ</button>
+  <div id="gameResult" class="result"></div>
+</div>
+
+<div id="quiz" class="hidden"></div>
+
+<div id="final" class="hidden"></div>
+
+</div>
+
+<!-- SOUND -->
+<audio id="click" src="https://assets.mixkit.co/sfx/preview/mixkit-metal-click-1109.mp3"></audio>
+<audio id="spinS" src="https://assets.mixkit.co/sfx/preview/mixkit-fast-swoosh-transition-166.mp3"></audio>
+<audio id="win" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-bonus-alert-767.mp3"></audio>
+
+<script>
+
+// --- GAME ---
+const prizes = ["Соус 🔥","Десерт 🍰","Скидка 10%","Скидка 20%","Блюдо 🍜"];
+
+function spin(){
+  click.play();
+  spinS.play();
+
+  setTimeout(()=>{
+    let prize = prizes[Math.floor(Math.random()*prizes.length)];
+    win.play();
+
+    document.getElementById("gameResult").innerHTML =
+      "ТЫ ВЫИГРАЛ: <b>"+prize+"</b><br><br><button class='btn' onclick='startQuiz()'>ПРОДОЛЖИТЬ</button>";
+  },1200);
+}
+
+// --- QUIZ ---
+const questions = [
+  {q:"Ты сейчас?", a:["🔥 Голодный","😏 Перекус","😎 Вайб"]},
+  {q:"Хочется?", a:["🌶 Острое","🍰 Сладкое","🍜 Сытное"]},
+  {q:"Настроение?", a:["⚡ Энергия","😌 Спокойствие","🎉 Радость"]},
+  {q:"Сегодня ты?", a:["😈 Хищник","🧘 Спокойный","🎯 Целевой"]}
+];
+
+let step = 0;
+
+function startQuiz(){
+  document.getElementById("game").classList.add("hidden");
+  document.getElementById("quiz").classList.remove("hidden");
+  renderQuiz();
+}
+
+function renderQuiz(){
+  if(step < questions.length){
+    let q = questions[step];
+
+    document.getElementById("quiz").innerHTML =
+      "<div class='title'>"+q.q+"</div>" +
+      q.a.map((a,i)=>`<button class='btn' onclick='nextQ()'>${a}</button>`).join("");
+  } else {
+    showResult();
+  }
+}
+
+function nextQ(){
+  click.play();
+  step++;
+  renderQuiz();
+}
+
+// --- RESULT ---
+const results = [
+  "🔥 ТЕБЕ НУЖЕН ВОК С ОСТРИНКОЙ",
+  "🍜 ТЕБЕ НУЖНО СЫТНО И БЫСТРО",
+  "🍰 ТЫ СЕГОДНЯ ПРО НАСЛАЖДЕНИЕ",
+  "⚡ ТЕБЕ НУЖЕН БУСТ",
+  "🎁 ВОЗЬМИ БОНУС К ЗАКАЗУ"
+];
+
+function showResult(){
+  document.getElementById("quiz").classList.add("hidden");
+  document.getElementById("final").classList.remove("hidden");
+
+  let r = results[Math.floor(Math.random()*results.length)];
+
+  document.getElementById("final").innerHTML =
+    "<div class='title'>"+r+"</div>" +
+    "<button class='btn'>ЗАКАЗАТЬ</button>";
+}
+
+</script>
+
+</body>
+</html>
